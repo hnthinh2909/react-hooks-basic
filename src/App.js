@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import queryString from "querystring";
 import "./App.scss";
 import ColorBox from "./components/ColorBox";
 import TodoList from "./components/TodoList";
 import TodoForm from "./components/TodoForm";
 import PostList from "./components/PostList";
+import Pagination from "./components/Pagination";
 
 function App() {
     const [todoList, setTodoList] = useState([
@@ -13,25 +15,36 @@ function App() {
     ]);
 
     const [postList, setPostList] = useState([]);
+    const [pagination, setPagination] = useState({
+        _page: 1,
+        _limit: 10,
+        _totalRows: 1,
+    });
+
+    const [filters, setFilters] = useState({
+        _limit: 10,
+        _page: 1,
+    });
 
     useEffect(() => {
         async function fetchPostList() {
             try {
-                const requestUrl = `http://js-post-api.herokuapp.com/api/posts?_limit=10&page=1`;
+                const paramsString = queryString.stringify(filters);
+                const requestUrl = `http://js-post-api.herokuapp.com/api/posts?${paramsString}`;
                 const response = await fetch(requestUrl);
                 const responseJSON = await response.json();
 
-                console.log(responseJSON.data);
-                const { data } = responseJSON;
-
+                const { data, pagination } = responseJSON;
+                setPagination(pagination);
                 setPostList(data);
+                console.log(pagination);
             } catch (err) {
                 console.log("Err: ", err);
             }
         }
 
         fetchPostList();
-    }, []);
+    }, [filters]);
 
     const onTodoClick = (todo) => {
         console.log(todo);
@@ -53,14 +66,26 @@ function App() {
         setTodoList(newTodoList);
     };
 
+    const handlePageChange = (newPage) => {
+        console.log("newPage: ", newPage);
+        setFilters({
+            ...filters,
+            _page: newPage,
+        });
+    };
+
     return (
         <div className="app">
             <h1>
                 Welcome to React Hooks!
                 <ColorBox />
-                <TodoForm onSubmit={handleTodoFormSubmit} />
-                <TodoList todos={todoList} onTodoClick={onTodoClick} />
+                {/* <TodoForm onSubmit={handleTodoFormSubmit} />
+                <TodoList todos={todoList} onTodoClick={onTodoClick} /> */}
                 <PostList posts={postList} />
+                <Pagination
+                    pagination={pagination}
+                    onPageChange={handlePageChange}
+                />
             </h1>
         </div>
     );

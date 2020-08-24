@@ -9,6 +9,7 @@ import Pagination from "./components/Pagination";
 import PostFiltersForm from "./components/PostFIltersForm";
 import Clock from "./components/Clock";
 import BetterClock from "./components/BetterClock";
+import MagicBox from "./components/MagicBox";
 
 function App() {
     const [todoList, setTodoList] = useState([
@@ -96,6 +97,7 @@ function App() {
                 {/* <ColorBox />
                 <TodoForm onSubmit={handleTodoFormSubmit} />
                 <TodoList todos={todoList} onTodoClick={onTodoClick} /> */}
+                <MagicBox />
                 {showClock && <Clock />}
                 <BetterClock />
                 <button onClick={() => setShowClock(!showClock)}>

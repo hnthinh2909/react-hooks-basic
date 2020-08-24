@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import useMagicColor from "../../hooks/useMagicColor";
 import "./MagicBox.scss";
 
